@@ -3,5 +3,5 @@
 version = 4
 
 [[package]]
-name = "file_metadata_xtractor"
+name = "file_collector"
 version = "0.1.0"

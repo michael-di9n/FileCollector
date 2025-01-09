@@ -1,5 +1,5 @@
 [package]
-name = "file_metadata_xtractor"
+name = "file_collector"
 version = "0.1.0"
 edition = "2021"
 
