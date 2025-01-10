@@ -1,6 +1,9 @@
 [package]
-name = "file_collector"
+name = "FileCollector"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+digest = "0.10.7"
+sha2="0.10"
+regex = "1.11.1"
