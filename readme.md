@@ -13,7 +13,7 @@
 ```
 FileCollector: A lightweight, fast, and configurable file collect and analyser
 
-![FileCollector]()
+[![FileCollector](https://github.com/michael-di9n/FileCollector/blob/master/docs/thumbnail.jpg)](https://github.com/michael-di9n/FileCollector/blob/master/docs/demo.mp4)
 
 ## Installation
 Build manually
