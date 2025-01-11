@@ -13,7 +13,7 @@
 ```
 FileCollector: A lightweight, fast, and configurable file collect and analyser
 
-![FileCollector](docs/images/demo.gif)
+![FileCollector]()
 
 ## Installation
 Build manually
