@@ -171,7 +171,12 @@ impl Config {
 
         if !had_arg {
             println!("File Collector is a light weight file traversal and collection program use the following syntax\nFileCollector.exe [-p|--path <path>] [-f <filenamepattern>] [-o <output folder>]")
-        }   
+        } 
+        if output_folder == DEFAULT_OUTPUT_FOLDERNAME && path != None {
+            let base = PathBuf::from(path.as_ref().unwrap());
+            let new_buf = base.join(output_folder);
+            output_folder = new_buf.to_str().unwrap().to_owned();
+        }  
 
         Ok(Config {
             path,
