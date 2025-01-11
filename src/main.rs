@@ -11,12 +11,14 @@ fn main() {
         eprintln!("Problem parsing arguments: {err}.");
         process::exit(1);
     });
-    let prefix = String::new();
-
-    FileCollector::create_output_folder(&config.output_folder);
-
-    println!("{}", config.path);
-    if let Err(e) =  FileCollector::visit_dirs(Path::new(&config.path), &config, &FileCollector::handle_file, &FileCollector::handle_folder, prefix) {
-        eprintln!("Error visiting directories {e}");
-    } 
+    
+    if config.path != None {
+        let prefix = String::new();
+        FileCollector::create_output_folder(&config.output_folder);
+    
+        println!("{}", config.path.as_ref().unwrap());
+        if let Err(e) =  FileCollector::visit_dirs(Path::new(&config.path.as_ref().unwrap()), &config, &FileCollector::handle_file, &FileCollector::handle_folder, prefix) {
+            eprintln!("Error visiting directories {e}");
+        } 
+    }
 }

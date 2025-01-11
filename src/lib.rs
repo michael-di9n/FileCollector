@@ -5,7 +5,7 @@ use std::{
 use regex::Regex;
 use sha2::{Sha256, Digest};
 
-
+const VERSION: &str = "0.1.0 beta";
 use std::path::{Path, PathBuf};
 const POINT: &str = "├──";
 const END_POINT: &str = "└──";
@@ -92,7 +92,7 @@ pub fn visit_dirs(dir: &Path, config: &Config, cb: &dyn Fn(&DirEntry, &String, b
 
 
 pub struct Config {
-    pub path: String,
+    pub path: Option<String>,
     pub filename_pattern: Option<Regex>,
     pub filecont_pattern: Option<Regex>,
     pub output_folder: String,
@@ -104,20 +104,22 @@ impl Config {
     pub fn build(
         mut args: impl Iterator<Item = String>,
     ) -> Result<Config, &'static str> {
-        args.next();
-
-
-        let path = match args.next() {
-            Some(path) => path,
-            None => return Err("Didn't get a path string. Use -h or -help to get information")
-        };
+        let _ = args.next();
 
         let mut filename_pattern: Option<Regex> = None;
         let mut filecont_pattern: Option<Regex> = None;
         let mut output_folder: String = DEFAULT_OUTPUT_FOLDERNAME.to_owned();
         let mut should_move = false;
+        let mut path = None;
+        let mut had_arg = false;
         while let Some(arg) = args.next()  {
-            if arg == "-f" || arg == "-file" {
+            had_arg = true;
+
+            if arg == "-p" || arg == "--path" {
+                path = args.next();
+            }
+
+            if arg == "-f" || arg == "--file" {
                 filename_pattern = match args.next() {
                     Some(pattern) => {
                         match Regex::new(&pattern) {
@@ -132,7 +134,7 @@ impl Config {
                 }
             }
 
-            if arg == "-fc" || arg == "-fcontent" {
+            if arg == "-fc" || arg == "--fcontent" {
                 filecont_pattern = match args.next()  {
                     Some(pattern) => {
                         match Regex::new(&pattern) {
@@ -147,20 +149,28 @@ impl Config {
                 }
             }
 
-            if arg == "-o" || arg == "-output" {
+            if arg == "-o" || arg == "--output" {
                 if let Some(out_foldername) =  args.next() {
                     output_folder = out_foldername;
                 }
             }
 
-            if arg == "-h" || arg == "-help" {
-                println!("example file_collector <path> [-f <filenamepattern>] [-o <output folder>]")
+            if arg == "-h" || arg == "--help" {
+                println!("example file_collector [-p|--path <path>] [-f|--filename <filenamepattern>] [-o|--output <output folder>]")
                 // println!("example file_collector <path> [-f <filenamepattern>] [-fc <filecontent pattern>] [-o <output folder>] [-move ]")
             }
             if arg == "move" {
                 should_move = true;
                 println!("moving file to output instead of copy")
             }
+
+            if arg == "-v" || arg == "--version" {
+                println!("{VERSION}");
+            }
+        }
+
+        if !had_arg {
+            println!("File Collector is a light weight file traversal and collection program use the following syntax\nFileCollector.exe [-p|--path <path>] [-f <filenamepattern>] [-o <output folder>]")
         }   
 
         Ok(Config {
@@ -198,9 +208,9 @@ mod tests {
     fn digest_test() {
         let base = PathBuf::from("randompath/");
         let mut hasher = Sha256::new();
-        // hasher.update(base);
-        // let hash = hasher.finalize();
-        // println!("Hash result{:x}", hash);
+        hasher.update(base.to_str().unwrap().as_bytes());
+        let hash = hasher.finalize();
+        println!("Hash result{:x}", hash);
     }
 
 
